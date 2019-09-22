@@ -1,4 +1,5 @@
 FROM alpine:3.1
+RUN apk add --update python py-pip
 COPY . /app
 WORKDIR /app
 RUN pip install --upgrade pip

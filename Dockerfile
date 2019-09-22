@@ -1,9 +1,7 @@
-FROM alpine:3.1
-RUN apk add --update python py-pip
+FROM python:alpine3.7
 COPY . /app
 WORKDIR /app
-RUN pip install --upgrade pip
-RUN pip install Flask
-#RUN pip install -r requirements.txt
+RUN pip install pytest
+RUN pip install flask
 EXPOSE 5000
-CMD ["python", "app.py"]
+CMD python ./app.py

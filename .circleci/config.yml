@@ -6,12 +6,12 @@ jobs:
       - checkout
       - docker/check
       - docker/build:
-          image: rbalagopalakrishna/flaskapp
-          docker-username: rbalagopalakrishna
+          image: balagopalraj/flaskapp
+          docker-username: balagopalraj
           docker-password: Bbala@123.
       - docker/push:
           digest-path: /tmp/digest.txt
-          image: rbalagopalakrishna/flaskapp
+          image: balagopalraj/flaskapp
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"

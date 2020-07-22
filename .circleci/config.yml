@@ -23,7 +23,7 @@ jobs:
           command: |
             echo Bbala@123. | docker login --username balagopalraj --password-stdin
             docker images
-            docker push $IMAGE_NAME:latest
+            docker push balagopalraj/flaskapp:latest
 workflows:
   version: 2
   build-master:

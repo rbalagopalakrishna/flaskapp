@@ -3,12 +3,12 @@ jobs:
     executor: docker/docker
     parameters:
       docker-password:
-        default: DOCKER_PASSWORD=Bbala@123.
+        default: Bbala@123.
         description: |
           Name of environment variable storing your Docker password
         type: env_var_name
       docker-username:
-        default: DOCKER_LOGIN=balagopalraj
+        default: balagopalraj
         description: |
           Name of environment variable storing your Docker username
         type: env_var_name

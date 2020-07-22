@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     environment:
-      IMAGE_NAME: docker.io/library/flaskapp
+      IMAGE_NAME: balagopalraj/flaskapp
       DOCKERHUB_USERNAME: balagopalraj
       DOCKERHUB_PASS: Bbala@123.
     docker:
@@ -15,7 +15,7 @@ jobs:
           command: docker build -t $IMAGE_NAME:latest .
   publish-latest:
     environment:
-      IMAGE_NAME: flaskapp
+      IMAGE_NAME: balagopalraj/flaskapp
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:

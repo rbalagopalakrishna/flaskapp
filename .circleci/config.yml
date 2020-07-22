@@ -1,14 +1,23 @@
 jobs:
   build-and-push:
     executor: docker/docker
+    parameters:
+      docker-password:
+        default: Bbala@123.
+        description: |
+          Name of environment variable storing your Docker password
+        type: env_var_name
+      docker-username:
+        default: balagopalraj
+        description: |
+          Name of environment variable storing your Docker username
+        type: env_var_name
     steps:
       - setup_remote_docker
       - checkout
       - docker/check
       - docker/build:
           image: balagopalraj/flaskapp
-          docker-username: balagopalraj
-          docker-password: Bbala@123.
       - docker/push:
           digest-path: /tmp/digest.txt
           image: balagopalraj/flaskapp

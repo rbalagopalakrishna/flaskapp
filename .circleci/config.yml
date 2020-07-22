@@ -7,6 +7,8 @@ jobs:
       - docker/check
       - docker/build:
           image: rbalagopalakrishna/flaskapp
+          docker-username: rbalagopalakrishna
+          docker-password: Bbala@123.
       - docker/push:
           digest-path: /tmp/digest.txt
           image: rbalagopalakrishna/flaskapp

@@ -10,7 +10,9 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker image
-          command: docker build -t balagopalraj/flaskapp:latest .
+          command: |
+            docker build -t $IMAGE_NAME:latest .
+            docker images
   publish-latest:
     environment:
       IMAGE_NAME: flaskapp

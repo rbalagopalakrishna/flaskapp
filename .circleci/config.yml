@@ -1,26 +1,91 @@
-version: 2
+#version: 2
+#jobs:
+#  build:
+#    environment:
+#      IMAGE_NAME: balagopalraj/flaskapp
+#    docker:
+#      - image: circleci/buildpack-deps:stretch
+#    steps:
+#      - checkout
+#      - setup_remote_docker
+#      - run:
+#          name: Build Docker image
+#          command: |
+#            docker build -t $IMAGE_NAME:latest .
+#            docker images
+#            echo Bbala@123. | docker login --username balagopalraj --password-stdin
+#            docker images
+#            docker push $IMAGE_NAME:latest
+#workflows:
+#  version: 2
+#  build-master:
+#    jobs:
+#      - build:
+#          filters:
+#            branches:
+#              only: master
+
 jobs:
-  build:
-    environment:
-      IMAGE_NAME: balagopalraj/flaskapp
-    docker:
-      - image: circleci/buildpack-deps:stretch
+  delete-helm-release:
+    executor: aws-eks/python
+    parameters:
+      cluster-name:
+        description: Cluster name
+        type: string
     steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build Docker image
-          command: |
-            docker build -t $IMAGE_NAME:latest .
-            docker images
-            echo Bbala@123. | docker login --username balagopalraj --password-stdin
-            docker images
-            docker push $IMAGE_NAME:latest
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+      - helm/delete-helm-release:
+          purge: true
+          release-name: grafana-release
+          timeout: 600
+  install-helm-chart:
+    executor: aws-eks/python
+    parameters:
+      cluster-name:
+        description: Cluster name
+        type: string
+    steps:
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+      - helm/install-helm-chart:
+          chart: stable/grafana
+          release-name: grafana-release
+  install-helm-on-cluster:
+    executor: aws-eks/python
+    parameters:
+      cluster-name:
+        description: Cluster name
+        type: string
+    steps:
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+          install-kubectl: true
+      - helm/install-helm-on-cluster:
+          enable-cluster-wide-admin-access: true
+orbs:
+  aws-eks: circleci/aws-eks@0.2
+  helm: circleci/helm@1.0
+version: 2.1
 workflows:
-  version: 2
-  build-master:
+  deployment:
     jobs:
-      - build:
-          filters:
-            branches:
-              only: master
+      - aws-eks/create-cluster:
+          cluster-name: test-cluster
+      - install-helm-on-cluster:
+          cluster-name: test-cluster
+          requires:
+            - aws-eks/create-cluster
+      - install-helm-chart:
+          cluster-name: test-cluster
+          requires:
+            - install-helm-on-cluster
+      - delete-helm-release:
+          cluster-name: test-cluster
+          requires:
+            - install-helm-chart
+      - aws-eks/delete-cluster:
+          cluster-name: test-cluster
+          requires:
+            - delete-helm-release
+          wait: true

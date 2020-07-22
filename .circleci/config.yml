@@ -3,6 +3,8 @@ jobs:
   build:
     environment:
       IMAGE_NAME: balagopalraj/flaskapp
+      DOCKERHUB_USERNAME: balagopalraj
+      DOCKERHUB_PASS: Bbala@123.
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -21,7 +23,7 @@ jobs:
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASS"
             docker push $IMAGE_NAME:latest
 workflows:
   version: 2

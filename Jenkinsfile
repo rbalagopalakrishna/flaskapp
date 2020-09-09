@@ -17,3 +17,4 @@ pipeline {
         sh 'python test_app.py'
       }
 }
+}

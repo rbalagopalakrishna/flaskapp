@@ -1,0 +1,28 @@
+import requests, os, json
+
+url = "https://api.npe.nike.com/v1/runtimes"
+
+
+def GetToken():
+    file = os.getenv("HOME") + "/.npe/auth.yaml"
+    with open(file) as f:
+        r = f.read().split('\n')
+        token = r[1].split('accesstoken: ')[1]
+    return token
+
+
+
+def runtimes():
+    response = requests.get(url,
+                            headers={'Authorization': 'Bearer %s' % GetToken()})
+    y = json.loads(response.text)
+    return y["data"]
+
+
+if __name__ == '__main__':
+
+
+    r = runtimes()
+    for i in r:
+        if i["status"] == "available":
+            print(f'id {i["id"]}, {i["version"]}, {i["name"]}, {i["slug"]}, {i["status"]}')

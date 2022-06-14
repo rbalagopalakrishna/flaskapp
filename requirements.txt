@@ -1,3 +1,1 @@
-nose
-flask
-flask
+flask==1.0.2

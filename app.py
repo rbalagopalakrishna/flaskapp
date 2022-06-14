@@ -1,17 +1,10 @@
-#!/usr/bin/env python
 from flask import Flask
-import unittest
-
 app = Flask(__name__)
 
+@app.route('/bala')
+def returnBackwardsString(random_string):
+    """Reverse and return the provided URI"""
+    return "".join(reversed(random_string))
 
-@app.route("/")
-def hello():
-    return "Hello Bala!"
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int("5000"), debug=True)
-    import xmlrunner
-    runner = xmlrunner.XMLTestRunner(output='test-reports')
-    unittest.main(testRunner=runner)
-    unittest.main()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
